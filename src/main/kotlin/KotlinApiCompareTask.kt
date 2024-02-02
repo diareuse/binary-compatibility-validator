@@ -5,15 +5,15 @@
 
 package kotlinx.validation
 
-import com.github.difflib.DiffUtils
-import com.github.difflib.UnifiedDiffUtils
-import java.io.*
-import java.util.TreeMap
-import javax.inject.Inject
+import com.github.difflib.*
 import org.gradle.api.*
 import org.gradle.api.file.*
-import org.gradle.api.model.ObjectFactory
+import org.gradle.api.model.*
 import org.gradle.api.tasks.*
+import org.gradle.api.tasks.Optional
+import java.io.*
+import java.util.*
+import javax.inject.*
 
 public open class KotlinApiCompareTask @Inject constructor(private val objects: ObjectFactory): DefaultTask() {
 
@@ -32,6 +32,9 @@ public open class KotlinApiCompareTask @Inject constructor(private val objects: 
     @Input
     @Optional
     public var nonExistingProjectApiDir: String? = null
+
+    @Input
+    public var incremental: Boolean = false
 
     internal fun compareApiDumps(apiReferenceDir: File, apiBuildDir: File) {
         if (apiReferenceDir.exists()) {
@@ -53,7 +56,6 @@ public open class KotlinApiCompareTask @Inject constructor(private val objects: 
     public val dummyOutputFile: File? = null
 
     private val projectName = project.name
-
     private val rootDir = project.rootProject.rootDir
 
     @TaskAction
@@ -63,6 +65,10 @@ public open class KotlinApiCompareTask @Inject constructor(private val objects: 
                     "Please ensure that ':apiDump' was executed in order to get API dump to compare the build against")
 
         val subject = projectName
+        val verification = when {
+            incremental -> IncrementalVerification(projectName, logger)
+            else -> VerificationStrict(projectName)
+        }
 
         /*
          * We use case-insensitive comparison to workaround issues with case-insensitive OSes
@@ -103,10 +109,7 @@ public open class KotlinApiCompareTask @Inject constructor(private val objects: 
         val actualFile = actualApiDeclaration.getFile(apiBuildDir)
         val diff = compareFiles(expectedFile, actualFile)
         if (diff != null) diffSet.add(diff)
-        if (diffSet.isNotEmpty()) {
-            val diffText = diffSet.joinToString("\n\n")
-            error("API check failed for project $subject.\n$diffText\n\n You can run :$subject:apiDump task to overwrite API declarations")
-        }
+        verification.verify(diffSet)
     }
 
     private fun File.relativeDirPath(): String {

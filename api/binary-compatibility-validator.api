@@ -9,6 +9,7 @@ public class kotlinx/validation/ApiValidationExtension {
 	public final fun getPublicClasses ()Ljava/util/Set;
 	public final fun getPublicMarkers ()Ljava/util/Set;
 	public final fun getPublicPackages ()Ljava/util/Set;
+	public final fun getUseIncrementalValidation ()Z
 	public final fun getValidationDisabled ()Z
 	public final fun setAdditionalSourceSets (Ljava/util/Set;)V
 	public final fun setApiDumpDirectory (Ljava/lang/String;)V
@@ -19,6 +20,7 @@ public class kotlinx/validation/ApiValidationExtension {
 	public final fun setPublicClasses (Ljava/util/Set;)V
 	public final fun setPublicMarkers (Ljava/util/Set;)V
 	public final fun setPublicPackages (Ljava/util/Set;)V
+	public final fun setUseIncrementalValidation (Z)V
 	public final fun setValidationDisabled (Z)V
 }
 
@@ -49,9 +51,11 @@ public class kotlinx/validation/KotlinApiCompareTask : org/gradle/api/DefaultTas
 	public fun <init> (Lorg/gradle/api/model/ObjectFactory;)V
 	public final fun getApiBuildDir ()Ljava/io/File;
 	public final fun getDummyOutputFile ()Ljava/io/File;
+	public final fun getIncremental ()Z
 	public final fun getNonExistingProjectApiDir ()Ljava/lang/String;
 	public final fun getProjectApiDir ()Ljava/io/File;
 	public final fun setApiBuildDir (Ljava/io/File;)V
+	public final fun setIncremental (Z)V
 	public final fun setNonExistingProjectApiDir (Ljava/lang/String;)V
 	public final fun setProjectApiDir (Ljava/io/File;)V
 }

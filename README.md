@@ -91,6 +91,11 @@ apiValidation {
     validationDisabled = true
 
     /**
+     * Flag to allow incremental validation, ie. apiCheck task will not fail for incremental changes.
+     */
+    useIncrementalValidation = true
+
+    /**
      * A path to a subdirectory inside the project root directory where dumps should be stored.
      */
     apiDumpDirectory = "api"
@@ -128,6 +133,11 @@ apiValidation {
      * Flag to programmatically disable compatibility validator
      */
     validationDisabled = false
+
+    /**
+     * Flag to allow incremental validation, ie. apiCheck task will not fail for incremental changes.
+     */
+    useIncrementalValidation = true
 
     /**
      * A path to a subdirectory inside the project root directory where dumps should be stored.
